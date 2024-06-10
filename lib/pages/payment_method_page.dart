@@ -59,7 +59,8 @@ class PaymentMethodPage extends StatelessWidget {
                 style: GoogleFonts.inika(
                   textStyle: const TextStyle(
                     fontSize: 16,
-                    color: Colors.black,
+                    fontWeight: FontWeight.bold,
+                    color: Color(0xFF0577D0),
                   ),
                 ),
                 textAlign: TextAlign.center,
