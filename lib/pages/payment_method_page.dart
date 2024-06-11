@@ -71,41 +71,89 @@ class PaymentMethodPage extends StatelessWidget {
               decoration: InputDecoration(
                 labelText: 'Card Number',
                 labelStyle: GoogleFonts.inika(),
-                border: const OutlineInputBorder(),
+                border: const OutlineInputBorder(
+                  borderRadius: BorderRadius.all(Radius.circular(10)),
+                  borderSide: BorderSide(color: Color.fromARGB(255, 5, 119, 208)),
+                ),
+                enabledBorder: const OutlineInputBorder(
+                  borderRadius: BorderRadius.all(Radius.circular(10)),
+                  borderSide: BorderSide(color: Color.fromARGB(255, 5, 119, 208)),
+                ),
+                focusedBorder: const OutlineInputBorder(
+                  borderRadius: BorderRadius.all(Radius.circular(10)),
+                  borderSide: BorderSide(color: Color.fromARGB(255, 5, 119, 208)),
+                ),
               ),
             ),
+          
             const SizedBox(height: 10),
             TextField(
               decoration: InputDecoration(
                 labelText: 'Name on Card',
                 labelStyle: GoogleFonts.inika(),
-                border: const OutlineInputBorder(),
+                border: const OutlineInputBorder(
+                   borderRadius: BorderRadius.all(Radius.circular(10)),
+                  borderSide:
+                      BorderSide(color: Color.fromARGB(255, 5, 119, 208)),
+                ),
+                enabledBorder: const OutlineInputBorder(
+                  borderRadius: BorderRadius.all(Radius.circular(10)),
+                  borderSide:
+                      BorderSide(color: Color.fromARGB(255, 5, 119, 208)),
+                ),
+                focusedBorder: const OutlineInputBorder(
+                  borderRadius: BorderRadius.all(Radius.circular(10)),
+                  borderSide:
+                      BorderSide(color: Color.fromARGB(255, 5, 119, 208)),
+              ),
               ),
             ),
             const SizedBox(height: 10),
             Row(
-              children: [
-                Expanded(
-                  child: TextField(
-                    decoration: InputDecoration(
-                      labelText: 'Expiry Date',
-                      labelStyle: GoogleFonts.inika(),
-                      border: const OutlineInputBorder(),
-                    ),
-                  ),
-                ),
-                const SizedBox(width: 10),
-                Expanded(
-                  child: TextField(
-                    decoration: InputDecoration(
-                      labelText: 'CVV',
-                      labelStyle: GoogleFonts.inika(),
-                      border: const OutlineInputBorder(),
-                    ),
-                  ),
-                ),
-              ],
-            ),
+  children: [
+    Expanded(
+      child: TextField(
+        decoration: InputDecoration(
+          labelText: 'Expire Date',
+          labelStyle: GoogleFonts.inika(),
+          border: const OutlineInputBorder(
+            borderRadius: BorderRadius.all(Radius.circular(10)),
+            borderSide: BorderSide(color: Color.fromARGB(255, 5, 119, 208)),
+          ),
+          enabledBorder: const OutlineInputBorder(
+            borderRadius: BorderRadius.all(Radius.circular(10)),
+            borderSide: BorderSide(color: Color.fromARGB(255, 5, 119, 208)),
+          ),
+          focusedBorder: const OutlineInputBorder(
+            borderRadius: BorderRadius.all(Radius.circular(10)),
+            borderSide: BorderSide(color: Color.fromARGB(255, 5, 119, 208)),
+          ),
+        ),
+      ),
+    ),
+    const SizedBox(width: 8), // Adjust spacing as needed
+    Expanded(
+      child: TextField(
+        decoration: InputDecoration(
+          labelText: 'CVV',
+          labelStyle: GoogleFonts.inika(),
+          border: const OutlineInputBorder(
+            borderRadius: BorderRadius.all(Radius.circular(10)),
+            borderSide: BorderSide(color: Color.fromARGB(255, 5, 119, 208)),
+          ),
+          enabledBorder: const OutlineInputBorder(
+            borderRadius: BorderRadius.all(Radius.circular(10)),
+            borderSide: BorderSide(color: Color.fromARGB(255, 5, 119, 208)),
+          ),
+          focusedBorder: const OutlineInputBorder(
+            borderRadius: BorderRadius.all(Radius.circular(10)),
+            borderSide: BorderSide(color: Color.fromARGB(255, 5, 119, 208)),
+          ),
+        ),
+      ),
+    ),
+  ],
+),
             const Spacer(),
             Center(
               child: Container(

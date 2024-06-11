@@ -70,10 +70,11 @@ class LoginPage extends StatelessWidget {
                         labelStyle: TextStyle(color:  Color.fromARGB(255, 5, 119, 208)),
                         filled: true,
                         fillColor: Colors.white,
-                        prefixIcon: Icon(Icons.person, color: Color.fromARGB(255, 5, 119, 208)),
+                        prefixIcon: Icon(Icons.person_outlined, color: Color.fromARGB(255, 5, 119, 208)),
                         border: OutlineInputBorder(
-                          borderRadius: BorderRadius.all(Radius.circular(10)),
-                          borderSide: BorderSide.none,
+                          borderRadius: BorderRadius.all(Radius.circular(15.0)),
+                          borderSide: BorderSide(color: Color.fromARGB(255, 5, 119, 208),
+                          width: 1.0,)
                         ),
                       ),
                     ),
@@ -85,7 +86,7 @@ class LoginPage extends StatelessWidget {
                         labelStyle: TextStyle(color: Color.fromARGB(255, 5, 119, 208)),
                         filled: true,
                         fillColor: Colors.white,
-                        prefixIcon: Icon(Icons.lock, color: Color.fromARGB(255, 5, 119, 208)),
+                        prefixIcon: Icon(Icons.key, color: Color.fromARGB(255, 5, 119, 208)),
                         border: OutlineInputBorder(
                           borderRadius: BorderRadius.all(Radius.circular(10)),
                           borderSide: BorderSide.none,
@@ -130,7 +131,7 @@ class LoginPage extends StatelessWidget {
                         Padding(
                           padding:  EdgeInsets.symmetric(horizontal: 10),
                           child: Text(
-                            'OR',
+                            'Or',
                             style: TextStyle(color: Colors.white),
                           ),
                         ),
@@ -154,7 +155,7 @@ class LoginPage extends StatelessWidget {
                           borderRadius: BorderRadius.circular(10),
                         ),
                         padding: const EdgeInsets.symmetric(horizontal: 40, vertical: 16),
-                        backgroundColor: Colors.transparent,
+                        backgroundColor: const Color(0xFF45A5FD),
                       ),
                       child: Text(
                         'Create Account',
