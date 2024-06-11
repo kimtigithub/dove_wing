@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class PaymentMethodPage extends StatelessWidget {
-  const PaymentMethodPage({super.key});
+  const PaymentMethodPage({super. key});
 
   @override
   Widget build(BuildContext context) {
@@ -47,10 +47,15 @@ class PaymentMethodPage extends StatelessWidget {
               ),
             ),
             const SizedBox(height: 20),
-            const PaymentOption(
+          const  PaymentOption(
               label: 'Visa Card',
               value: 'visa',
               icon: Icons.credit_card,
+              options: [
+                'Option 1',
+                'Option 2',
+                'Option 3',
+              ],
             ),
             const SizedBox(height: 20),
             Center(
@@ -59,8 +64,7 @@ class PaymentMethodPage extends StatelessWidget {
                 style: GoogleFonts.inika(
                   textStyle: const TextStyle(
                     fontSize: 16,
-                    fontWeight: FontWeight.bold,
-                    color: Color(0xFF0577D0),
+                    color:  Color.fromARGB(255, 5, 119, 208),
                   ),
                 ),
                 textAlign: TextAlign.center,
@@ -71,89 +75,41 @@ class PaymentMethodPage extends StatelessWidget {
               decoration: InputDecoration(
                 labelText: 'Card Number',
                 labelStyle: GoogleFonts.inika(),
-                border: const OutlineInputBorder(
-                  borderRadius: BorderRadius.all(Radius.circular(10)),
-                  borderSide: BorderSide(color: Color.fromARGB(255, 5, 119, 208)),
-                ),
-                enabledBorder: const OutlineInputBorder(
-                  borderRadius: BorderRadius.all(Radius.circular(10)),
-                  borderSide: BorderSide(color: Color.fromARGB(255, 5, 119, 208)),
-                ),
-                focusedBorder: const OutlineInputBorder(
-                  borderRadius: BorderRadius.all(Radius.circular(10)),
-                  borderSide: BorderSide(color: Color.fromARGB(255, 5, 119, 208)),
-                ),
+                border: const OutlineInputBorder(),
               ),
             ),
-          
             const SizedBox(height: 10),
             TextField(
               decoration: InputDecoration(
                 labelText: 'Name on Card',
                 labelStyle: GoogleFonts.inika(),
-                border: const OutlineInputBorder(
-                   borderRadius: BorderRadius.all(Radius.circular(10)),
-                  borderSide:
-                      BorderSide(color: Color.fromARGB(255, 5, 119, 208)),
-                ),
-                enabledBorder: const OutlineInputBorder(
-                  borderRadius: BorderRadius.all(Radius.circular(10)),
-                  borderSide:
-                      BorderSide(color: Color.fromARGB(255, 5, 119, 208)),
-                ),
-                focusedBorder: const OutlineInputBorder(
-                  borderRadius: BorderRadius.all(Radius.circular(10)),
-                  borderSide:
-                      BorderSide(color: Color.fromARGB(255, 5, 119, 208)),
-              ),
+                border: const OutlineInputBorder(),
               ),
             ),
             const SizedBox(height: 10),
             Row(
-  children: [
-    Expanded(
-      child: TextField(
-        decoration: InputDecoration(
-          labelText: 'Expire Date',
-          labelStyle: GoogleFonts.inika(),
-          border: const OutlineInputBorder(
-            borderRadius: BorderRadius.all(Radius.circular(10)),
-            borderSide: BorderSide(color: Color.fromARGB(255, 5, 119, 208)),
-          ),
-          enabledBorder: const OutlineInputBorder(
-            borderRadius: BorderRadius.all(Radius.circular(10)),
-            borderSide: BorderSide(color: Color.fromARGB(255, 5, 119, 208)),
-          ),
-          focusedBorder: const OutlineInputBorder(
-            borderRadius: BorderRadius.all(Radius.circular(10)),
-            borderSide: BorderSide(color: Color.fromARGB(255, 5, 119, 208)),
-          ),
-        ),
-      ),
-    ),
-    const SizedBox(width: 8), // Adjust spacing as needed
-    Expanded(
-      child: TextField(
-        decoration: InputDecoration(
-          labelText: 'CVV',
-          labelStyle: GoogleFonts.inika(),
-          border: const OutlineInputBorder(
-            borderRadius: BorderRadius.all(Radius.circular(10)),
-            borderSide: BorderSide(color: Color.fromARGB(255, 5, 119, 208)),
-          ),
-          enabledBorder: const OutlineInputBorder(
-            borderRadius: BorderRadius.all(Radius.circular(10)),
-            borderSide: BorderSide(color: Color.fromARGB(255, 5, 119, 208)),
-          ),
-          focusedBorder: const OutlineInputBorder(
-            borderRadius: BorderRadius.all(Radius.circular(10)),
-            borderSide: BorderSide(color: Color.fromARGB(255, 5, 119, 208)),
-          ),
-        ),
-      ),
-    ),
-  ],
-),
+              children: [
+                Expanded(
+                  child: TextField(
+                    decoration: InputDecoration(
+                      labelText: 'Expiry Date',
+                      labelStyle: GoogleFonts.inika(),
+                      border: const OutlineInputBorder(),
+                    ),
+                  ),
+                ),
+                const SizedBox(width: 10),
+                Expanded(
+                  child: TextField(
+                    decoration: InputDecoration(
+                      labelText: 'CVV',
+                      labelStyle: GoogleFonts.inika(),
+                      border: const OutlineInputBorder(),
+                    ),
+                  ),
+                ),
+              ],
+            ),
             const Spacer(),
             Center(
               child: Container(
@@ -195,8 +151,15 @@ class PaymentOption extends StatefulWidget {
   final String label;
   final String value;
   final IconData icon;
+  final List<String> options;
 
-  const PaymentOption({required this.label, required this.value, required this.icon, super.key});
+ const PaymentOption({
+    required this.label,
+    required this.value,
+    required this.icon,
+    required this.options,
+    super.key,
+  });
 
   @override
   State<PaymentOption> createState() => _PaymentOptionState();
@@ -204,54 +167,90 @@ class PaymentOption extends StatefulWidget {
 
 class _PaymentOptionState extends State<PaymentOption> {
   String? selectedValue;
+  bool isExpanded = false;
 
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: () {
-        setState(() {
-          selectedValue = widget.value;
-        });
-      },
-      child: Container(
-        decoration: BoxDecoration(
-          border: Border.all(
-            color: selectedValue == widget.value
-                ? const Color.fromARGB(255, 5, 119, 208)
-                : Colors.grey,
-          ),
-          borderRadius: BorderRadius.circular(10),
-        ),
-        padding: const EdgeInsets.all(16),
-        child: Row(
-          children: [
-            Radio<String>(
-              value: widget.value,
-              groupValue: selectedValue,
-              onChanged: (value) {
-                setState(() {
-                  selectedValue = value;
-                });
-              },
-              activeColor: const Color.fromARGB(255, 5, 119, 208),
-            ),
-            Icon(
-              widget.icon,
-              color: const Color.fromARGB(255, 5, 119, 208),
-            ),
-            const SizedBox(width: 10),
-            Text(
-              widget.label,
-              style: GoogleFonts.inika(
-                textStyle: const TextStyle(
-                  fontSize: 18,
-                  color: Colors.black,
-                ),
+    return Column(
+      children: [
+        GestureDetector(
+          onTap: () {
+            setState(() {
+              isExpanded = !isExpanded;
+            });
+          },
+          child: Container(
+            decoration: BoxDecoration(
+              border: Border.all(
+                color: selectedValue == widget.value
+                    ? const Color.fromARGB(255, 5, 119, 208)
+                    : Colors.grey,
               ),
+              borderRadius: BorderRadius.circular(10),
             ),
-          ],
+            padding: const EdgeInsets.all(16),
+            child: Row(
+              children: [
+                Radio<String>(
+                  value: widget.value,
+                  groupValue: selectedValue,
+                  onChanged: (value) {
+                    setState(() {
+                      selectedValue = value;
+                    });
+                  },
+                  activeColor: const Color.fromARGB(255, 5, 119, 208),
+                ),
+                Icon(
+                  widget.icon,
+                  color: const Color.fromARGB(255, 5, 119, 208),
+                ),
+                const SizedBox(width: 10),
+                Text(
+                  widget.label,
+                  style: GoogleFonts.inika(
+                    textStyle: const TextStyle(
+                      fontSize: 18,
+                      color:  Color.fromARGB(255, 5, 119, 208),
+                    ),
+                  ),
+                ),
+                const Spacer(),
+                Icon(
+                  isExpanded ? Icons.expand_less : Icons.expand_more,
+                  color: const Color.fromARGB(255, 5, 119, 208),
+                ),
+              ],
+            ),
+          ),
         ),
-      ),
+        if (isExpanded)
+          Container(
+            padding: const EdgeInsets.symmetric(horizontal: 16),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: widget.options
+                  .map(
+                    (option) => ListTile(
+                      title: Text(
+                        option,
+                        style: GoogleFonts.inika(
+                          textStyle: const TextStyle(
+                            fontSize: 16,
+                            color:  Color.fromARGB(255, 5, 119, 208),
+                          ),
+                        ),
+                      ),
+                      onTap: () {
+                        // Perform action when an option is tapped
+                       print('Option selected: $option');
+                      },
+                    ),
+                  )
+                  .toList(),
+            ),
+          ),
+      ],
     );
   }
 }
