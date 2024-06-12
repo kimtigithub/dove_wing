@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
@@ -64,6 +65,7 @@ class PaymentMethodPage extends StatelessWidget {
                 style: GoogleFonts.inika(
                   textStyle: const TextStyle(
                     fontSize: 16,
+                    fontWeight: FontWeight.bold,
                     color:  Color.fromARGB(255, 5, 119, 208),
                   ),
                 ),
@@ -211,6 +213,7 @@ class _PaymentOptionState extends State<PaymentOption> {
                   style: GoogleFonts.inika(
                     textStyle: const TextStyle(
                       fontSize: 18,
+                      fontWeight: FontWeight.bold,
                       color:  Color.fromARGB(255, 5, 119, 208),
                     ),
                   ),
@@ -237,13 +240,16 @@ class _PaymentOptionState extends State<PaymentOption> {
                         style: GoogleFonts.inika(
                           textStyle: const TextStyle(
                             fontSize: 16,
+                            fontWeight: FontWeight.bold,
                             color:  Color.fromARGB(255, 5, 119, 208),
                           ),
                         ),
                       ),
                       onTap: () {
                         // Perform action when an option is tapped
-                       print('Option selected: $option');
+                       if (kDebugMode) {
+                         print('Option selected: $option');
+                       }
                       },
                     ),
                   )
