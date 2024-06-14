@@ -23,8 +23,8 @@ class LandingPage extends StatelessWidget {
               child: Center(
                 child: ClipOval(child: Image.asset(
                   'images/pic1.jpg', // Path to your sample image
-                  width: 100,
-                  height: 100,
+                  width: 217,
+                  height: 217,
                   fit: BoxFit.cover,
                 ),),
               ),
