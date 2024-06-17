@@ -1,8 +1,19 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
-class LoginPage extends StatelessWidget {
+class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
+
+  @override
+  State<LoginPage> createState() => _LoginPageState();
+}
+
+class _LoginPageState extends State<LoginPage> {
+  final _formKey = GlobalKey<FormState>();
+
+  String _username = '';
+  String _password = '';
 
   @override
   Widget build(BuildContext context) {
@@ -17,7 +28,7 @@ class LoginPage extends StatelessWidget {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
+              children: <Widget>[
                 Text(
                   'DoveWing',
                   style: GoogleFonts.inika(
@@ -47,7 +58,7 @@ class LoginPage extends StatelessWidget {
               ],
             ),
           ),
-          const SizedBox(height:40),
+          const SizedBox(height: 40),
           // Second part with blue background and rounded borders
           Expanded(
             child: Container(
@@ -60,113 +71,155 @@ class LoginPage extends StatelessWidget {
               ),
               padding: const EdgeInsets.all(16.0),
               child: Center(
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    // Username TextField
-                  const  TextField(
-                      decoration: InputDecoration(
-                        labelText: 'Username',
-                        labelStyle: TextStyle(color:  Color.fromARGB(255, 5, 119, 208)),
-                        filled: true,
-                        fillColor: Colors.white,
-                        prefixIcon: Icon(Icons.person_outlined, color: Color.fromARGB(255, 5, 119, 208)),
-                        border: OutlineInputBorder(
-                          borderRadius: BorderRadius.all(Radius.circular(15.0)),
-                          borderSide: BorderSide(color: Color.fromARGB(255, 5, 119, 208),
-                          width: 1.0,)
+                child: Form(
+                  key: _formKey,
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: <Widget>[
+                      // Username TextField
+                      TextFormField(
+                        decoration: const InputDecoration(
+                          labelText: 'Username',
+                          labelStyle:
+                              TextStyle(color: Color.fromARGB(255, 5, 119, 208)),
+                          filled: true,
+                          fillColor: Colors.white,
+                          prefixIcon: Icon(Icons.person_outlined,
+                              color: Color.fromARGB(255, 5, 119, 208)),
+                          border: OutlineInputBorder(
+                              borderRadius:
+                                  BorderRadius.all(Radius.circular(15.0)),
+                              borderSide: BorderSide(
+                                color: Color.fromARGB(255, 5, 119, 208),
+                                width: 1.0,
+                              )),
                         ),
+                        validator: (value) {
+                          if (value == null || value.isEmpty) {
+                            return 'Please enter your username';
+                          }
+                          return null;
+                        },
+                        onSaved: (value) {
+                          _username = value!;
+                        },
                       ),
-                    ),
-                    const SizedBox(height: 16),
-                    // Password TextField
-                  const  TextField(
-                      decoration: InputDecoration(
-                        labelText: 'Password',
-                        labelStyle: TextStyle(color: Color.fromARGB(255, 5, 119, 208)),
-                        filled: true,
-                        fillColor: Colors.white,
-                        prefixIcon: Icon(Icons.key, color: Color.fromARGB(255, 5, 119, 208)),
-                        border: OutlineInputBorder(
-                          borderRadius: BorderRadius.all(Radius.circular(10)),
-                          borderSide: BorderSide.none,
-                        ),
-                       // obscureText: true,
-                      ),
-                    ),
-                    const SizedBox(height: 40),
-                    // Login Button
-                    ElevatedButton(
-                      onPressed: () {
-                         Navigator.pushNamed(context, '/home');
-                        // Handle login logic
-                      },
-                      style: ElevatedButton.styleFrom(
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(10),
-                        ),
-                        padding: const EdgeInsets.symmetric(horizontal: 40, vertical: 16),
-                        backgroundColor: Colors.white,
-                      ),
-                      child: Text(
-                        'Login',
-                        style: GoogleFonts.inika(
-                          fontWeight: FontWeight.bold,
-                          fontSize: 18,
-                          color: const Color.fromARGB(255, 5, 119, 208),
-                        ),
-                      ),
-                    ),
-                    const SizedBox(height: 20),
-              
-                    // OR separator
-                   const Row(
-                      children: [
-                        Expanded(
-                          child: Divider(
-                            color: Colors.black,
-                            thickness: 1,
+                      const SizedBox(height: 16),
+                      // Password TextField
+                      TextFormField(
+                        decoration: const InputDecoration(
+                          labelText: 'Password',
+                          labelStyle:
+                              TextStyle(color: Color.fromARGB(255, 5, 119, 208)),
+                          filled: true,
+                          fillColor: Colors.white,
+                          prefixIcon: Icon(Icons.key,
+                              color: Color.fromARGB(255, 5, 119, 208)),
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.all(Radius.circular(10)),
+                            borderSide: BorderSide.none,
                           ),
+                          // obscureText: true,
                         ),
-                        Padding(
-                          padding:  EdgeInsets.symmetric(horizontal: 10),
-                          child: Text(
-                            'Or',
-                            style: TextStyle(color: Colors.white),
-                          ),
-                        ),
-                         Expanded(
-                          child: Divider(
-                            color: Colors.black,
-                            thickness: 1,
-                          ),
-                        ),
-                      ],
-                    ),
-                    const SizedBox(height:20),
-                    // Create an Account Button
-                    ElevatedButton(
-                      onPressed: () {
-                        Navigator.pushNamed(context, '/register');
-                      },
+                        obscureText: true,
+                        validator: (value) {
+                          if (value == null || value.isEmpty) {
+                            return 'Please enter your password';
+                          }
+                          if (!RegExp( r'^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[!@#\$&_*~]).{8,}$').hasMatch(value)) {
+                            return 'Password must contain at least one uppercase letter, one lowercase letter, one number, one special character, and the lenght should at least be 8';
+                          }
+                          return null;
+                        },
+                        onSaved: (value) {
+                          _password = value!;
+                        },
+                      ),
+                      const SizedBox(height: 40),
+                      // Login Button
+                      ElevatedButton(
+                        onPressed: () {
+                          if (_formKey.currentState!.validate()) {
+                            _formKey.currentState!.save();
+                            // Handle form submission
+                            if (kDebugMode) {
+                              print('Form Submitted');
+                              print('Username: $_username');
+                              print('Password: $_password');
+                            }
+                            Navigator.pushNamed(context, '/home');
+                          }
+                          // Handle login logic
+                        },
                         style: ElevatedButton.styleFrom(
-                          side:const BorderSide(color: Colors.white, width: 2),
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(10),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(10),
+                          ),
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 40, vertical: 16),
+                          backgroundColor: Colors.white,
                         ),
-                        padding: const EdgeInsets.symmetric(horizontal: 40, vertical: 16),
-                        backgroundColor: const Color(0xFF45A5FD),
-                      ),
-                      child: Text(
-                        'Create Account',
-                        style: GoogleFonts.inika(
-                          fontWeight: FontWeight.bold,
-                          fontSize: 18,
-                          color: Colors.white,
+                        child: Text(
+                          'Login',
+                          style: GoogleFonts.inika(
+                            fontWeight: FontWeight.bold,
+                            fontSize: 18,
+                            color: const Color.fromARGB(255, 5, 119, 208),
+                          ),
                         ),
                       ),
-                    ),
-                  ],
+                      const SizedBox(height: 20),
+                  
+                      // OR separator
+                      const Row(
+                        children: [
+                          Expanded(
+                            child: Divider(
+                              color: Colors.black,
+                              thickness: 1,
+                            ),
+                          ),
+                          Padding(
+                            padding: EdgeInsets.symmetric(horizontal: 10),
+                            child: Text(
+                              'Or',
+                              style: TextStyle(color: Colors.white),
+                            ),
+                          ),
+                          Expanded(
+                            child: Divider(
+                              color: Colors.black,
+                              thickness: 1,
+                            ),
+                          ),
+                        ],
+                      ),
+                      const SizedBox(height: 20),
+                      // Create an Account Button
+                      ElevatedButton(
+                        onPressed: () {
+                          Navigator.pushNamed(context, '/register');
+                        },
+                        style: ElevatedButton.styleFrom(
+                          side: const BorderSide(color: Colors.white, width: 2),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(10),
+                          ),
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 40, vertical: 16),
+                          backgroundColor: const Color(0xFF45A5FD),
+                        ),
+                        child: Text(
+                          'Create Account',
+                          style: GoogleFonts.inika(
+                            fontWeight: FontWeight.bold,
+                            fontSize: 18,
+                            color: Colors.white,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
               ),
             ),
