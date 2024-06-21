@@ -1,3 +1,4 @@
+import 'package:dove_wings/server/db.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -11,9 +12,29 @@ class LoginPage extends StatefulWidget {
 
 class _LoginPageState extends State<LoginPage> {
   final _formKey = GlobalKey<FormState>();
+  final Database db = Database();
 
   String _username = '';
   String _password = '';
+
+  void _login() async {
+    if (_formKey.currentState!.validate()) {
+      _formKey.currentState!.save();
+      // Handle form submission
+      if (kDebugMode) {
+        print('Form Submitted');
+        print('Username: $_username');
+        print('Password: $_password');
+      }
+      bool success = await db.loginUser(_username, _password);
+      // ignore: use_build_context_synchronously
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text(success ? 'Login successful' : 'Login failed')),
+      );
+      // ignore: use_build_context_synchronously
+      Navigator.pushNamed(context, '/home');
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -80,8 +101,8 @@ class _LoginPageState extends State<LoginPage> {
                       TextFormField(
                         decoration: const InputDecoration(
                           labelText: 'Username',
-                          labelStyle:
-                              TextStyle(color: Color.fromARGB(255, 5, 119, 208)),
+                          labelStyle: TextStyle(
+                              color: Color.fromARGB(255, 5, 119, 208)),
                           filled: true,
                           fillColor: Colors.white,
                           prefixIcon: Icon(Icons.person_outlined,
@@ -109,8 +130,8 @@ class _LoginPageState extends State<LoginPage> {
                       TextFormField(
                         decoration: const InputDecoration(
                           labelText: 'Password',
-                          labelStyle:
-                              TextStyle(color: Color.fromARGB(255, 5, 119, 208)),
+                          labelStyle: TextStyle(
+                              color: Color.fromARGB(255, 5, 119, 208)),
                           filled: true,
                           fillColor: Colors.white,
                           prefixIcon: Icon(Icons.key,
@@ -126,7 +147,9 @@ class _LoginPageState extends State<LoginPage> {
                           if (value == null || value.isEmpty) {
                             return 'Please enter your password';
                           }
-                          if (!RegExp( r'^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[!@#\$&_*~]).{8,}$').hasMatch(value)) {
+                          if (!RegExp(
+                                  r'^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[!@#\$&_*~]).{8,}$')
+                              .hasMatch(value)) {
                             return 'Password must contain at least one uppercase letter, one lowercase letter, one number, one special character, and the lenght should at least be 8';
                           }
                           return null;
@@ -138,19 +161,7 @@ class _LoginPageState extends State<LoginPage> {
                       const SizedBox(height: 40),
                       // Login Button
                       ElevatedButton(
-                        onPressed: () {
-                          if (_formKey.currentState!.validate()) {
-                            _formKey.currentState!.save();
-                            // Handle form submission
-                            if (kDebugMode) {
-                              print('Form Submitted');
-                              print('Username: $_username');
-                              print('Password: $_password');
-                            }
-                            Navigator.pushNamed(context, '/home');
-                          }
-                          // Handle login logic
-                        },
+                        onPressed: _login,
                         style: ElevatedButton.styleFrom(
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(10),
@@ -169,7 +180,7 @@ class _LoginPageState extends State<LoginPage> {
                         ),
                       ),
                       const SizedBox(height: 20),
-                  
+
                       // OR separator
                       const Row(
                         children: [

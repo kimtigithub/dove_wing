@@ -1,3 +1,6 @@
+// ignore_for_file: use_build_context_synchronously
+
+import 'package:dove_wings/server/db.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -10,6 +13,7 @@ class RegisterPage extends StatefulWidget {
 }
 
 class _RegisterPageState extends State<RegisterPage> {
+  final Database db = Database();
   final _formKey = GlobalKey<FormState>();
 
   String _firstName = '';
@@ -17,6 +21,23 @@ class _RegisterPageState extends State<RegisterPage> {
   String _password = '';
   bool _isChecked = false;
 
+  void _register() async {
+    if (_formKey.currentState!.validate()) {
+      _formKey.currentState!.save();
+      // Handle form submission
+      if (kDebugMode) {
+        print('Form Submitted');
+        print('First Name: $_firstName');
+        print('Email: $_email');
+        print('Password: $_password');
+      }
+      bool success = await db.registerUser(_firstName, _email, _password);
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text(success ? 'Registration successful' : 'Registration failed')),
+      );
+      Navigator.pushNamed(context, '/login');
+    }
+  }
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -42,7 +63,8 @@ class _RegisterPageState extends State<RegisterPage> {
               TextFormField(
                 decoration: const InputDecoration(
                   labelText: 'First Name',
-                  labelStyle: TextStyle(color: Color.fromARGB(255, 5, 119, 208)),
+                  labelStyle:
+                      TextStyle(color: Color.fromARGB(255, 5, 119, 208)),
                   filled: true,
                   fillColor: Colors.white,
                   prefixIcon: Icon(Icons.person_outline,
@@ -78,11 +100,12 @@ class _RegisterPageState extends State<RegisterPage> {
               TextFormField(
                 decoration: const InputDecoration(
                   labelText: 'Email',
-                  labelStyle: TextStyle(color: Color.fromARGB(255, 5, 119, 208)),
+                  labelStyle:
+                      TextStyle(color: Color.fromARGB(255, 5, 119, 208)),
                   filled: true,
                   fillColor: Colors.white,
-                  prefixIcon:
-                      Icon(Icons.email, color: Color.fromARGB(255, 5, 119, 208)),
+                  prefixIcon: Icon(Icons.email,
+                      color: Color.fromARGB(255, 5, 119, 208)),
                   border: OutlineInputBorder(
                     borderRadius: BorderRadius.all(Radius.circular(10)),
                     borderSide:
@@ -117,7 +140,8 @@ class _RegisterPageState extends State<RegisterPage> {
               TextFormField(
                 decoration: const InputDecoration(
                   labelText: 'Password',
-                  labelStyle: TextStyle(color: Color.fromARGB(255, 5, 119, 208)),
+                  labelStyle:
+                      TextStyle(color: Color.fromARGB(255, 5, 119, 208)),
                   filled: true,
                   fillColor: Colors.white,
                   prefixIcon:
@@ -144,7 +168,9 @@ class _RegisterPageState extends State<RegisterPage> {
                   if (value == null || value.isEmpty) {
                     return 'Please enter your password';
                   }
-                  if (!RegExp( r'^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[!@#\$&_*~]).{8,}$').hasMatch(value)) {
+                  if (!RegExp(
+                          r'^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[!@#\$&_*~]).{8,}$')
+                      .hasMatch(value)) {
                     return 'Password must contain at least one uppercase letter, one lowercase letter, one number, one special character, and the lenght should at least be 8';
                   }
                   return null;
@@ -185,28 +211,11 @@ class _RegisterPageState extends State<RegisterPage> {
                   ),
                 ),
               ]),
-          
+
               const Spacer(),
               // Sign Up Button
               ElevatedButton(
-                onPressed: () {
-                  if (_formKey.currentState!.validate() && _isChecked) {
-                    _formKey.currentState!.save();
-                    // Handle form submission
-                    if (kDebugMode) {
-                      print('Form Submitted');
-                      print('First Name: $_firstName');
-                      print('Email: $_email');
-                      print('Password: $_password');
-                    }    
-                    Navigator.pushNamed(context, '/login');
-                  } else if (!_isChecked){
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        const SnackBar(content: Text('You must agree to the terms and conditions')),
-                      );
-                  }
-                  // Handle registration logic
-                },
+                onPressed: _register,
                 style: ElevatedButton.styleFrom(
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(10),
