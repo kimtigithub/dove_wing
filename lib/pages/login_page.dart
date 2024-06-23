@@ -1,7 +1,10 @@
-import 'package:dove_wings/server/db.dart';
+// ignore_for_file: use_build_context_synchronously
+
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'dart:convert';
+import 'package:http/http.dart' as http;
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
@@ -12,7 +15,6 @@ class LoginPage extends StatefulWidget {
 
 class _LoginPageState extends State<LoginPage> {
   final _formKey = GlobalKey<FormState>();
-  final Database db = Database();
 
   String _username = '';
   String _password = '';
@@ -26,13 +28,26 @@ class _LoginPageState extends State<LoginPage> {
         print('Username: $_username');
         print('Password: $_password');
       }
-      bool success = await db.loginUser(_username, _password);
-      // ignore: use_build_context_synchronously
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text(success ? 'Login successful' : 'Login failed')),
-      );
-      // ignore: use_build_context_synchronously
+
+      final response = await http.post(
+      Uri.parse('http://localhost:3307/api/auth/Login'),
+      headers: <String, String>{
+        'Content-Type': 'application/json; charset=UTF-8',
+      },
+      body: jsonEncode(<String, String>{
+        'Email': _username,
+        'Password': _password,
+      }),
+    );
+
+    if (response.statusCode == 200) {
+      // Login successful
+      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('User logged in successfully')));
       Navigator.pushNamed(context, '/home');
+    } else {
+      // Login failed
+      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Failed to logged in user, try again')));
+    }
     }
   }
 

@@ -1,9 +1,10 @@
 // ignore_for_file: use_build_context_synchronously
+import 'dart:convert';
 
-import 'package:dove_wings/server/db.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:http/http.dart' as http;
 
 class RegisterPage extends StatefulWidget {
   const RegisterPage({super.key});
@@ -13,7 +14,6 @@ class RegisterPage extends StatefulWidget {
 }
 
 class _RegisterPageState extends State<RegisterPage> {
-  final Database db = Database();
   final _formKey = GlobalKey<FormState>();
 
   String _firstName = '';
@@ -21,23 +21,46 @@ class _RegisterPageState extends State<RegisterPage> {
   String _password = '';
   bool _isChecked = false;
 
-  void _register() async {
+  Future<void> _register() async {
     if (_formKey.currentState!.validate()) {
-      _formKey.currentState!.save();
-      // Handle form submission
-      if (kDebugMode) {
-        print('Form Submitted');
-        print('First Name: $_firstName');
-        print('Email: $_email');
-        print('Password: $_password');
+      if (!_isChecked) {
+        ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+            content: Text('Please accept our terms and conditions.')));
+      } else {
+        _formKey.currentState!.save();
+        // Handle form submission
+        if (kDebugMode) {
+          print('Form Submitted');
+          print('First Name: $_firstName');
+          print('Email: $_email');
+          print('Password: $_password');
+        }
+        final response = await http.post(
+          Uri.parse('http://localhost:3307/api/auth/Register'),
+          headers: <String, String>{
+            'Content-Type': 'application/json; charset=UTF-8',
+          },
+          body: jsonEncode(<String, String>{
+            'FirstName': _firstName,
+            'Email': _email,
+            'Password': _password,
+          }),
+        );
+
+        if (response.statusCode == 200) {
+          // Registration successful
+          ScaffoldMessenger.of(context).showSnackBar(
+              const SnackBar(content: Text('User registered successfully')));
+          Navigator.pushNamed(context, '/login');
+        } else {
+          // Registration failed
+          ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+              content: Text('Failed to registered user, try again')));
+        }
       }
-      bool success = await db.registerUser(_firstName, _email, _password);
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text(success ? 'Registration successful' : 'Registration failed')),
-      );
-      Navigator.pushNamed(context, '/login');
     }
   }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -186,9 +209,9 @@ class _RegisterPageState extends State<RegisterPage> {
                   value: _isChecked,
                   activeColor: const Color.fromARGB(
                       255, 5, 119, 208), // Set the active color of the checkbox
-                  onChanged: (bool? value) {
+                  onChanged: (value) {
                     setState(() {
-                      _isChecked = value ?? false;
+                      _isChecked = value!;
                     });
                   },
                 ),
