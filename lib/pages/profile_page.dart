@@ -1,9 +1,51 @@
+import 'package:dove_wings/server/services/api_service.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
-class ProfilePage extends StatelessWidget {
+class ProfilePage extends StatefulWidget {
   const ProfilePage({super.key});
 
+  @override
+  State<ProfilePage> createState() => _ProfilePageState();
+}
+
+class _ProfilePageState extends State<ProfilePage> {
+  String email = '';
+  
+  @override
+  void initState() {
+    super.initState();
+    _loadEmail();
+  }
+
+  void _loadEmail () async {
+    final apiService = ApiService();
+    try {
+      final fetchEmail = await apiService.getEmail();
+      setState(() {
+        email = fetchEmail;
+      });
+    } catch (e) {
+      // Handle error
+      ScaffoldMessenger.of(context).showSnackBar(
+              const SnackBar(content: Text('Failed to fetch email')));
+      print(e);
+    }
+  }
+
+  void _logout() async {
+    final apiService = ApiService();
+    try {
+      await apiService.logout();
+      Navigator.of(context).pushReplacementNamed('/login');
+    } catch (e) {
+      // Handle error
+       ScaffoldMessenger.of(context).showSnackBar(
+              const SnackBar(content: Text('Failed to logout')));
+      print(e);
+    }
+  }
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -185,9 +227,7 @@ class ProfilePage extends StatelessWidget {
                         borderRadius: BorderRadius.circular(10),
                       ),
                     ),
-                    onPressed: () {
-                      Navigator.pushNamed(context, '/login');
-                    },
+                    onPressed: _logout,
                     child: Text(
                       'Logout',
                       style: GoogleFonts.inika(
