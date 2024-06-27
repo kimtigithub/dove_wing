@@ -1,10 +1,12 @@
 // ignore_for_file: use_build_context_synchronously
 
+import 'package:dove_wings/pages/profile_page.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
+import 'package:shared_preferences/shared_preferences.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
@@ -18,6 +20,7 @@ class _LoginPageState extends State<LoginPage> {
 
   String _username = '';
   String _password = '';
+  String errorMessage = '';
 
   void _login() async {
     if (_formKey.currentState!.validate()) {
@@ -30,24 +33,36 @@ class _LoginPageState extends State<LoginPage> {
       }
 
       final response = await http.post(
-      Uri.parse('http://localhost:3307/api/auth/Login'),
-      headers: <String, String>{
-        'Content-Type': 'application/json; charset=UTF-8',
-      },
-      body: jsonEncode(<String, String>{
-        'Email': _username,
-        'Password': _password,
-      }),
-    );
+        Uri.parse('http://localhost:3307/login'),
+        headers: <String, String>{
+          'Content-Type': 'application/json; charset=UTF-8',
+        },
+        body: jsonEncode(<String, String>{
+          'Email': _username,
+          'Password': _password,
+        }),
+      );
 
-    if (response.statusCode == 200) {
-      // Login successful
-      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('User logged in successfully')));
-      Navigator.pushNamed(context, '/home');
-    } else {
-      // Login failed
-      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Failed to logged in user, try again')));
-    }
+      if (response.statusCode == 200) {
+        // Login successful
+        final data = jsonDecode(response.body);
+        final token = data['token'] ?? '';
+        final prefs = await SharedPreferences.getInstance();
+        await prefs.setString('token', token);
+        ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(content: Text('User logged in successfully')));
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(builder: (context) => const ProfilePage()),
+        );
+      } else {
+        // Login failed
+        setState(() {
+          errorMessage = 'Invalid credentials';
+        });
+        ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+            content: Text('Failed to logged in user, try again')));
+      }
     }
   }
 
@@ -194,6 +209,13 @@ class _LoginPageState extends State<LoginPage> {
                           ),
                         ),
                       ),
+                      if (errorMessage.isNotEmpty) ...[
+                        const SizedBox(height: 20),
+                        Text(
+                          errorMessage,
+                          style: const TextStyle(color: Colors.red),
+                        ),
+                      ],
                       const SizedBox(height: 20),
 
                       // OR separator

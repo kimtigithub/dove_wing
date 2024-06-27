@@ -1,13 +1,13 @@
 // services/api_service.dart
 import 'dart:convert';
+import 'package:flutter/foundation.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 
 class ApiService {
-  static const String baseUrl = 'http://127.0.0.1:3307/api/auth';
+  static const String baseUrl = 'http://localhost:3307';
 
-  Future<String> register(
-      String firstName, String email, String password) async {
+  Future<String> register(String firstName, String email, String password) async {
     final response = await http.post(
       Uri.parse('$baseUrl/Register'),
       headers: <String, String>{
@@ -41,6 +41,9 @@ class ApiService {
       final data = jsonDecode(response.body);
       final prefs = await SharedPreferences.getInstance();
       await prefs.setString('token', data['token']);
+      if (kDebugMode) {
+        print('Token saved: ${data['token']}');
+      }
       return 'Login successful';
     } else {
       throw Exception('Failed to login');
@@ -52,21 +55,18 @@ class ApiService {
     await prefs.remove('token');
   }
 
-  Future<String> getEmail() async {
-    final prefs = await SharedPreferences.getInstance();
-    final token = prefs.getString('token');
-    final response = await http.get(
-      Uri.parse('$baseUrl/email'),
-      headers: <String, String>{
-        'Authorization': 'Bearer $token',
-      },
-    );
-
+   Future<String> fetchEmail() async {
+    final response = await http.get(Uri.parse('$baseUrl/Email'));
+    print(response.body);
     if (response.statusCode == 200) {
-      final data = jsonDecode(response.body);
-      return data['email'];
+      List<dynamic> data = json.decode(response.body);
+      if (data.isNotEmpty) {
+        return data[0]['Email'];
+      } else {
+        throw Exception('No email found');
+      }
     } else {
-      throw Exception('Failed to fetch email');
+      throw Exception('Failed to load email');
     }
   }
 }
