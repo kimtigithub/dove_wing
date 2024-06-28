@@ -1,6 +1,4 @@
 // ignore_for_file: use_build_context_synchronously
-
-import 'package:dove_wings/pages/profile_page.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -51,10 +49,7 @@ class _LoginPageState extends State<LoginPage> {
         await prefs.setString('token', token);
         ScaffoldMessenger.of(context).showSnackBar(
             const SnackBar(content: Text('User logged in successfully')));
-        Navigator.pushReplacement(
-          context,
-          MaterialPageRoute(builder: (context) => const ProfilePage()),
-        );
+        Navigator.pushNamed(context, '/home');
       } else {
         // Login failed
         setState(() {
